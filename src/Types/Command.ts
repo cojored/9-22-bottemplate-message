@@ -1,11 +1,8 @@
-import { ApplicationCommandOptionData } from "discord.js";
-
 export default interface Command {
   name: string;
   description: string;
-  options?: [ApplicationCommandOptionData];
+  usage: string;
   execute?: Function;
-  autocomplete?: Function;
   button?: Function;
   modal?: Function;
   selectMenu?: Function;

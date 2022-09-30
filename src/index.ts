@@ -17,20 +17,16 @@ export const client = new Client({
   ],
   partials: [Partials.Message],
 });
-const CommandHandler = new CMDHandler();
+const CommandHandler = new CMDHandler(config.prefix);
 
 client.on("ready", async () => {
   client?.application?.commands.set(CommandHandler.commands);
   console.log("Ready!");
 });
 
+client.on("messageCreate", (message) => CommandHandler.run(message));
+
 client.on("interactionCreate", async (interaction) => {
-  if (interaction.isCommand()) {
-    CommandHandler.run(interaction, interaction.commandName);
-  }
-  if (interaction.isAutocomplete()) {
-    CommandHandler.autocomplete(interaction, interaction.commandName);
-  }
   if (interaction.isButton()) {
     CommandHandler.button(interaction, interaction.customId.split("|")[0]);
   }

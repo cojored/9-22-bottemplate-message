@@ -1,9 +1,9 @@
-import { CommandInteraction } from "discord.js";
+import { Message } from "discord.js";
 
 export default {
   name: "test",
   description: "Test Command",
-  async execute(interaction: CommandInteraction) {
-    interaction.reply("Hello World");
+  async execute(message: Message, args: String[]) {
+    message.reply("Hello World");
   },
 };

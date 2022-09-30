@@ -1,7 +1,6 @@
 import {
-  AutocompleteInteraction,
   ButtonInteraction,
-  CommandInteraction,
+  Message,
   ModalSubmitInteraction,
   SelectMenuInteraction,
 } from "discord.js";
@@ -16,12 +15,14 @@ export default class CommandHandler {
   private cmds: {
     [key: string]: Command;
   };
-  constructor() {
+  private prefix: string;
+  constructor(prefix: string) {
     this.cmds = {};
+    this.prefix = prefix;
     let commandFolder = "../Commands/";
     fs.readdirSync(__dirname + "/" + commandFolder).forEach(async (file) => {
       if (file.endsWith(".js")) {
-        let command = (
+        let command: Command = (
           await import(`file://${__dirname}/${commandFolder}/${file}`)
         ).default;
         this.cmds[command.name] = command;
@@ -34,24 +35,18 @@ export default class CommandHandler {
       let data: Command = {
         name: x.name,
         description: x.description,
+        usage: x.usage,
       };
-      if (x.options) data["options"] = x.options;
       commands.push(data);
     });
     return commands;
   }
-  run(interaction: CommandInteraction, name: string) {
-    if (this.cmds[name]) {
-      let command = this.cmds[name];
-      command.execute?.(interaction);
-    } else {
-      interaction.reply({ content: "Command not found", ephemeral: true });
-    }
-  }
-  async autocomplete(interaction: AutocompleteInteraction, name: string) {
-    if (this.cmds[name]) {
-      let command = this.cmds[name];
-      command.autocomplete?.(interaction);
+  run(message: Message) {
+    const args = message.content.slice(this.prefix.length).trim().split(/ +/);
+    const command = args.shift() as string;
+    const cmd = this.cmds[command];
+    if (cmd) {
+      cmd.execute!(message, args);
     }
   }
   async button(interaction: ButtonInteraction, cmdName: string) {
