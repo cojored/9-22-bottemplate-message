@@ -20,7 +20,6 @@ export const client = new Client({
 const CommandHandler = new CMDHandler(config.prefix);
 
 client.on("ready", async () => {
-  client?.application?.commands.set(CommandHandler.commands);
   console.log("Ready!");
 });
 
