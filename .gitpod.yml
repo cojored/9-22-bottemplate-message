@@ -1,0 +1,6 @@
+vscode:
+  extensions:
+    - Chrismettal.behave-full-theme
+    - esbenp.prettier-vscode
+    - ms-vscode.vscode-typescript-next
+    - mgmcdermott.vscode-language-babel
